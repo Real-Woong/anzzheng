@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AnzZheng AI 학습 파이프라인</title>
+<link rel="stylesheet" href="../src/pipeline.css">
+</head>
+<body>
+<header>
+  <div>
+    <div class="kicker">AnzZheng · AI 학습 파이프라인</div>
+    <h1 id="title">데이터에서 알림 모델까지</h1>
+  </div>
+  <div class="ctl">
+    <button id="prev" aria-label="이전">◀</button>
+    <button id="play" aria-label="재생/정지">❚❚</button>
+    <button id="next" aria-label="다음">▶</button>
+  </div>
+</header>
+<nav id="nav"></nav>
+<div class="prog"><i id="prog"></i></div>
+
+<main>
+  <section class="stage">
+
+    <!-- 1 데이터 -->
+    <svg id="sc0" class="scene" viewBox="0 0 800 340">
+      <g class="pop" style="--d:.1s"><rect x="20" y="24" width="270" height="130" rx="16" class="bx"/>
+        <text x="40" y="56" class="h">시뮬레이터</text><text x="40" y="78" class="s">MuJoCo(MyoBack) + 공식 합성</text>
+        <text x="40" y="100" class="s">실험실 32명 · 하루 생활 160명</text>
+        <path data-wave="1,10,3,40,126" class="draw c1" pathLength="1000"/></g>
+      <g class="pop" style="--d:.5s"><rect x="20" y="186" width="270" height="130" rx="16" class="bx"/>
+        <text x="40" y="218" class="h">HARTH 공개 데이터</text><text x="40" y="240" class="s">실제 사람 22명 · 활동 라벨</text>
+        <text x="40" y="262" class="s">걷기·앉기·서기 …</text>
+        <path data-wave="2,9,5,40,288" class="draw c2" pathLength="1000" style="animation-delay:.5s"/></g>
+      <line x1="300" y1="90" x2="500" y2="150" class="ln"/><line x1="300" y1="250" x2="500" y2="190" class="ln"/>
+      <g transform="translate(300 90)"><circle r="6" class="dot c1 fx" style="--dx:200px;--dy:60px"/></g>
+      <g transform="translate(300 250)"><circle r="6" class="dot c2 fx" style="--dx:200px;--dy:-60px"/></g>
+      <g class="pop" style="--d:1s"><rect x="500" y="100" width="280" height="140" rx="16" class="bx on"/>
+        <text x="520" y="134" class="h">학습용 윈도우 풀</text>
+        <text x="520" y="158" class="s">사람 단위로 나눠서 섞는다</text>
+        <rect x="520" y="176" width="40" height="40" rx="6" class="c1f"/><rect x="568" y="176" width="40" height="40" rx="6" class="c1f"/>
+        <rect x="616" y="176" width="40" height="40" rx="6" class="c2f"/><rect x="664" y="176" width="40" height="40" rx="6" class="c2f"/><rect x="712" y="176" width="40" height="40" rx="6" class="c1f"/></g>
+      <g class="pop" style="--d:1.6s"><rect x="500" y="262" width="280" height="54" rx="12" class="warn"/>
+        <text x="520" y="285" class="s b">평가용 사람은 따로 (학습과 겹치지 않음)</text><text x="520" y="304" class="s">seed 7777 · 보통 / 센서 12° 밀림</text></g>
+    </svg>
+
+    <!-- 2 신호처리 -->
+    <svg id="sc1" class="scene" viewBox="0 0 800 340">
+      <text x="30" y="22" class="s b">원시 12채널 (IMU 2개 × 가속도 3 + 자이로 3)</text>
+      <g id="raw"></g>
+      <line x1="250" y1="170" x2="320" y2="170" class="ln"/><g transform="translate(250 170)"><circle r="6" class="dot c1 fx"/></g>
+      <g class="pop" style="--d:1s"><rect x="320" y="90" width="170" height="160" rx="16" class="bx on"/>
+        <text x="338" y="122" class="h">신호처리</text>
+        <text x="338" y="148" class="s">단위 변환</text><text x="338" y="168" class="s">상보 필터 기울기</text>
+        <text x="338" y="188" class="s">구간 굴곡각 계산</text><text x="338" y="208" class="s">3단 보정</text><text x="338" y="228" class="s dim">서기·힙힌지·앉기·구부정</text></g>
+      <line x1="490" y1="170" x2="540" y2="170" class="ln"/><g transform="translate(490 170)"><circle r="6" class="dot c2 fx" style="animation-delay:.6s"/></g>
+      <text x="560" y="22" class="s b">모델 입력 8채널</text>
+      <g id="chs"></g>
+    </svg>
+
+    <!-- 3 윈도우 -->
+    <svg id="sc2" class="scene" viewBox="0 0 800 340">
+      <text x="30" y="26" class="s b">연속 신호 (50Hz)</text>
+      <path data-wave="3,26,9,30,92,740" class="c1 sig"/>
+      <rect id="win" x="30" y="40" width="74" height="104" rx="8" class="winr"/>
+      <text x="30" y="166" class="s">2초 창 (100샘플)을 0.5초씩 밀면서 자른다</text>
+      <g id="cards"></g>
+      <text x="30" y="318" class="s dim">이동·전환 구간은 자세 라벨 −1 → 손실에서 제외 (활동 게이트가 따로 막는다)</text>
+    </svg>
+
+    <!-- 4 모델 -->
+    <svg id="sc3" class="scene" viewBox="0 0 800 340">
+      <g id="blocks"></g>
+    </svg>
+
+    <!-- 5 사전학습 -->
+    <svg id="sc4" class="scene" viewBox="0 0 800 340">
+      <g class="pop" style="--d:.1s"><rect x="20" y="40" width="150" height="120" rx="16" class="bx"/>
+        <text x="36" y="72" class="h">HARTH</text><text x="36" y="94" class="s">활동 라벨만</text><text x="36" y="114" class="s">22명 사람 데이터</text></g>
+      <line x1="172" y1="100" x2="230" y2="100" class="ln"/><g transform="translate(172 100)"><circle r="6" class="dot c2 fx"/></g>
+      <g class="pop" style="--d:.6s"><rect x="230" y="30" width="170" height="140" rx="16" class="bx on"/>
+        <text x="248" y="62" class="h">몸통 (Conv)</text><text x="248" y="84" class="s">움직임의 모양을</text><text x="248" y="104" class="s">먼저 배운다</text>
+        <rect x="248" y="124" width="134" height="12" rx="6" class="c2f grow"/></g>
+      <g class="pop" style="--d:1s"><rect x="430" y="30" width="130" height="60" rx="12" class="bx on"/><text x="446" y="66" class="h2">활동 헤드 학습</text></g>
+      <g class="pop" style="--d:1.2s"><rect x="430" y="110" width="130" height="60" rx="12" class="bx off"/><text x="446" y="136" class="s">자세 헤드</text><text x="446" y="154" class="s dim">라벨 −1 → 손실 0</text></g>
+      <line x1="400" y1="100" x2="430" y2="60" class="ln"/><line x1="400" y1="100" x2="430" y2="140" class="ln"/>
+      <text x="590" y="42" class="s b">손실(loss)</text>
+      <path d="M590 60 V170 H780" class="ax"/>
+      <path d="M590 70 C620 110,650 150,780 160" class="draw c1" pathLength="1000" style="animation-duration:3s"/>
+      <text x="590" y="190" class="s dim">epoch 1 → 8 (batch 512)</text>
+      <g class="pop" style="--d:1.8s"><rect x="20" y="230" width="760" height="80" rx="16" class="warn"/>
+        <text x="40" y="262" class="h2">왜 먼저?</text>
+        <text x="40" y="286" class="s">우리 시뮬 데이터는 적고, HARTH는 사람이 많다. 큰 데이터로 "움직임 일반 상식"을 먼저 익힌 뒤 우리 과제로 넘어간다.</text></g>
+    </svg>
+
+    <!-- 6 미세조정 vs 처음부터 -->
+    <svg id="sc5" class="scene" viewBox="0 0 800 340">
+      <text x="30" y="24" class="s b">같은 조건에서 두 방식을 비교 (전이학습은 가정하지 않고 잰다)</text>
+      <path d="M40 50 V230 H460" class="ax"/>
+      <path d="M40 66 C90 130,150 190,200 210 S 360 224,450 226" class="draw c1" pathLength="1000" style="animation-duration:3.2s"/>
+      <path d="M40 124 C70 170,100 200,130 212 S 190 224,230 226" class="draw c2" pathLength="1000" style="animation-duration:2s;animation-delay:.4s"/>
+      <text x="300" y="150" class="s" fill="#e4572e">처음부터 (25 epoch)</text>
+      <text x="150" y="258" class="s" fill="#1b998b">HARTH → 미세조정 (15 epoch, 작은 lr)</text>
+      <text x="40" y="276" class="s dim">epoch → (곡선은 개념도)</text>
+      <g transform="translate(500 50)">
+        <text x="0" y="0" class="s b">실제 학습 시간 (평균)</text>
+        <rect x="0" y="16" width="270" height="34" rx="8" class="trk"/><rect x="0" y="16" width="270" height="34" rx="8" class="c1f grow2" style="--w:270px"/>
+        <text x="10" y="39" class="s inv">처음부터 22.6분</text>
+        <rect x="0" y="62" width="270" height="34" rx="8" class="trk"/><rect x="0" y="62" width="138" height="34" rx="8" class="c2f grow2" style="--w:138px;animation-delay:.5s"/>
+        <text x="10" y="85" class="s inv">사전학습 11.6분</text>
+        <text x="0" y="132" class="s">시드 6개 평균, 정확도는 비슷</text>
+        <text x="0" y="152" class="s b" fill="#1b998b">학습 시간 ≈ 절반</text>
+      </g>
+      <g class="pop" style="--d:2s"><rect x="20" y="290" width="760" height="40" rx="12" class="warn"/>
+        <text x="40" y="315" class="s">세 모델 비교: 사전학습만 · 미세조정 · 처음부터  →  evaluator가 같은 평가 사람들로 채점</text></g>
+    </svg>
+
+    <!-- 7 평가 -->
+    <svg id="sc6" class="scene" viewBox="0 0 800 340">
+      <g id="evalbars"></g>
+    </svg>
+
+    <!-- 8 배포 -->
+    <svg id="sc7" class="scene" viewBox="0 0 800 340">
+      <g id="deploy"></g>
+    </svg>
+
+  </section>
+
+  <aside class="info">
+    <div class="tag" id="tag"></div>
+    <h2 id="h"></h2>
+    <ul id="pts"></ul>
+    <div class="code" id="code"></div>
+    <div id="evalctl" class="seg" hidden>
+      <button data-c="normal" class="on">보통 조건</button><button data-c="stress">센서 12° 밀림</button>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  <a href="presentation.html">발표 슬라이드 보기</a>
+  <span class="muted">← → 키로 이동 · 모든 수치는 시뮬레이션 데이터 기준</span>
+</footer>
+<script src="../src/pipeline.js"></script>
+</body>
+</html>
