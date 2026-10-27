@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+data/
+artifacts/
+.claude/
+*.log
+*.tgz
+.DS_Store
+*.md
+research/
+PPT/

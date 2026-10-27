@@ -1,0 +1,6 @@
+numpy
+pandas
+torch
+mujoco>=3.3
+myo-sim   # MyoBack 요추 모델 파일 (MuJoCo 시뮬레이터용, --sim mujoco)
+pyserial   # ESP32 시리얼 수신 (ml/app/record.py)

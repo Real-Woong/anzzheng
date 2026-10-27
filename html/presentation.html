@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AnzZheng 발표</title>
+<link rel="stylesheet" href="../src/presentation.css">
+</head>
+<body>
+<div id="bar"></div>
+<div id="stage"><div id="deck">
+
+<!-- 1 -->
+<section class="slide dark" style="justify-content:center">
+  <div class="kicker">GDGoC AI/ML 트랙 · 중간 발표</div>
+  <h1>AnzZheng</h1>
+  <p style="font-size:30px;margin-top:22px;line-height:1.45;color:#d6e0ea">두 개의 관성 센서로 요추 굴곡을 측정하는<br>개인 맞춤형 자세 알림 시스템</p>
+  <p class="muted" style="margin-top:48px;font-size:18px">2026. 10. 27 · 1인 프로젝트</p>
+</section>
+
+<!-- 2 -->
+<section class="slide">
+  <div class="kicker">01 · 동기</div>
+  <h2>디스크는 진료실 밖 23시간에 관리된다</h2>
+  <div class="row">
+    <div class="col" style="justify-content:center">
+      <div class="big coral">23<span style="font-size:48px">시간</span></div>
+      <p class="muted">하루 중 진료실 밖에서 보내는 시간.<br>그런데 이 시간을 측정해 주는 것이 없다.</p>
+    </div>
+    <div class="col" style="justify-content:center">
+      <div class="card"><h3>직접 겪은 문제</h3><p>허리디스크 환자인 제가 병원에서 받은 안내의 대부분은 약이 아니라 <b>"이 동작을 피하세요"</b>였습니다.</p></div>
+      <div class="card c"><h3>가장 나쁜 자세</h3><p>등 윗부분만 기대고 허리가 뜬 채 눕듯이 앉기</p></div>
+      <div class="card"><h3>빠진 것</h3><p>통증은 부하가 쌓인 뒤에야 옵니다. 지금 허리를 말고 있는지 알려 주는 <b>실시간 피드백</b>이 없습니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="kicker">02 · 문제</div>
+  <h2>기존 자세 교정기는 센서 1개, 기준도 모두 동일</h2>
+  <div class="row">
+    <div class="card c col">
+      <h3>센서 1개의 한계</h3>
+      <ul>
+        <li>상체 기울기만 측정</li>
+        <li>권장 동작인 <b>힙 힌지</b>에도 경고 (오알림)</li>
+        <li>허리가 뜬 채 뒤로 기댄 자세는 놓침</li>
+      </ul>
+    </div>
+    <div class="card c col">
+      <h3>모두에게 같은 기준</h3>
+      <ul>
+        <li>탈출 부위마다 피해야 할 동작이 다름</li>
+        <li>요추: 허리 말아 굽히기</li>
+        <li>경추: 목 앞으로 빼기</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:18px" class="muted">프로필 = 진단명이 아니라 <b style="color:var(--ink)">'피해야 할 동작'</b>. 시스템은 진단하지 않고, 받은 안내를 그대로 입력한다.</p>
+</section>
+
+<!-- 4 -->
+<section class="slide">
+  <div class="kicker">03 · 핵심 원리</div>
+  <h2>곡률은 두 점의 기울기 차이다</h2>
+  <div class="row">
+    <div class="col" style="flex:1.2">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card c" style="text-align:center">
+          <svg viewBox="0 0 200 150" width="100%"><path d="M30 130 L30 70" stroke="#9fb0c4" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M30 70 Q70 60 90 20" stroke="#14213d" stroke-width="10" stroke-linecap="round" fill="none"/><circle cx="30" cy="100" r="9" fill="#1b998b"/><circle cx="70" cy="58" r="9" fill="#e4572e"/></svg>
+          <h3>요추 굴곡</h3><p>위 센서만 더 기욺<br><b class="coral">굴곡각 큼 → 알림</b></p>
+        </div>
+        <div class="card t" style="text-align:center">
+          <svg viewBox="0 0 200 150" width="100%"><path d="M30 130 L30 80" stroke="#9fb0c4" stroke-width="10" stroke-linecap="round" fill="none"/><path d="M30 80 L110 40" stroke="#14213d" stroke-width="10" stroke-linecap="round" fill="none"/><circle cx="36" cy="78" r="9" fill="#1b998b"/><circle cx="80" cy="56" r="9" fill="#1b998b"/></svg>
+          <h3>힙 힌지</h3><p>두 센서가 같이 기욺<br><b class="teal">굴곡각 ≈ 0 → 정상</b></p>
+        </div>
+      </div>
+      <div class="card" style="text-align:center;background:var(--ink);color:#fff">
+        <p style="font-size:24px">구간 굴곡각 = (θ상부 − θ하부) − 중립 보정값</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card"><h3>왜 2개인가</h3><p>θ상부 = 골반 기울기 + 요추 굴곡<br>센서 1개는 <b>식 1개, 미지수 2개</b>. S1 센서가 골반 기울기를 직접 재서 풀어 줍니다.</p></div>
+      <div class="card"><h3>배치</h3><p><b>상부</b> T12/L1 (요추 위쪽 끝)<br><b>하부</b> S1 (천골)<br>한 MCU가 같은 타이머로 읽어 동기화 문제 없음</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide">
+  <div class="kicker">04 · 시스템 구조</div>
+  <h2>'무엇을 측정하나'와 '무엇을 감시하나'의 분리</h2>
+  <div style="display:flex;flex-direction:column;gap:12px;flex:1">
+    <div class="card" style="display:flex;gap:20px;align-items:center"><span class="chip">1</span><div><b>센서 · 신호처리</b><span class="muted"> — 50Hz 원시값 → 단위 변환·3단 보정 → 구간 굴곡각</span></div></div>
+    <div class="card" style="display:flex;gap:20px;align-items:center"><span class="chip">2</span><div><b>보편 레이어 (ML)</b><span class="muted"> — 2초 윈도우 → 자세 요소 + 활동 상태(정적·이동·전환). 모든 사용자 동일</span></div></div>
+    <div class="card t" style="display:flex;gap:20px;align-items:center"><span class="chip">3</span><div><b>개인 프로필</b><span class="muted"> — 감시할 자세·임계값·지속시간 선택. 사용자마다 다름</span></div></div>
+    <div class="card" style="display:flex;gap:20px;align-items:center"><span class="chip">4</span><div><b>판정 · 알림</b><span class="muted"> — 5초 지속 시에만 울리는 상태 머신 (정상→후보→확정→회복)</span></div></div>
+  </div>
+  <p class="muted">프로필을 바꿔도 모델을 다시 학습할 필요가 없다 — 모델은 '어디가 얼마나 굽었나'만 배운다.</p>
+</section>
+
+<!-- 6 -->
+<section class="slide">
+  <div class="kicker">05 · 지금까지 구현한 것</div>
+  <h2>파이프라인 전체가 코드로 연결되어 있다</h2>
+  <div class="grid3">
+    <div class="card t"><h3>신호처리</h3><p>채널 파생, 서기/힙힌지/앉기/구부정 3단 보정</p></div>
+    <div class="card t"><h3>판정 엔진 4종</h3><p>v0a(센서1) · v0b(센서2 룰) · v0b 개인 범위 보정 · CNN</p></div>
+    <div class="card t"><h3>상태 머신</h3><p>히스테리시스, 활동 게이트, 5초 디바운싱</p></div>
+    <div class="card"><h3>PostureCNN</h3><p>활동 3분류 + 자세 요소 2개 멀티헤드 (PyTorch, MPS)</p></div>
+    <div class="card"><h3>학습 · 평가</h3><p>LOSO 평가, 이벤트 지표(재현율·시간당 오알림)</p></div>
+    <div class="card"><h3>전이학습</h3><p>HARTH 22명 사전학습 → 미세조정</p></div>
+    <div class="card"><h3>시뮬레이터</h3><p>공식 기반 합성 + MuJoCo(MyoBack) 물리 모델, 하루 생활 시뮬</p></div>
+    <div class="card"><h3>실시간</h3><p>LiveMonitor, 알림 문장 생성, 프로필 전환 데모</p></div>
+    <div class="card"><h3>펌웨어</h3><p>ESP32 + MPU-6050×2, 50Hz CSV 시리얼</p></div>
+  </div>
+  <p class="note">구조: app(Controller) → services(Service) → repo(Repo) → domain. 계산은 services에만 둔다.</p>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="kicker">06 · 접근</div>
+  <h2>하드웨어 전에, 시뮬레이션과 공개 데이터로 먼저</h2>
+  <div class="row">
+    <div class="col">
+      <div class="card"><h3>왜 이 순서인가</h3><p>부품을 사고 데이터를 모으기 전에 <b>파이프라인과 평가 방법</b>을 먼저 끝내면, 실데이터가 들어오는 순간 바로 검증할 수 있습니다.</p></div>
+      <div class="card t"><h3>MuJoCo 시뮬레이터</h3><p>근골격 모델에서 센서 두 점의 신호를 생성. 센서가 밀리는 상황(2~6°, 스트레스 12°)도 재현.</p></div>
+      <div class="card t"><h3>HARTH 사전학습</h3><p>공개 활동 데이터 22명으로 '움직임' 표현을 먼저 학습한 뒤 우리 과제로 미세조정.</p></div>
+    </div>
+    <div class="col">
+      <div class="card"><h3>평가 설정</h3>
+        <ul>
+          <li>학습과 겹치지 않는 시뮬 사용자로 평가</li>
+          <li><b>보통</b> 조건 vs <b>스트레스</b>(센서 12° 밀림)</li>
+          <li>지표: 재현율, 오알림 횟수 / 시간</li>
+          <li>CNN은 시드 6개 반복, 평균 ± 표준편차</li>
+        </ul>
+      </div>
+      <div class="card c"><h3>주의</h3><p>아래 결과는 전부 <b>시뮬레이션 데이터</b> 기준입니다. 실제 사람에게도 통하는지는 다음 단계에서 확인합니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="kicker">07 · 결과 ① — 가설 1</div>
+  <h2>센서 2개로 오알림이 2.08 → 0.02회/시간</h2>
+  <div class="row">
+    <div class="col" style="justify-content:center">
+      <p class="muted" style="font-size:17px">시간당 오알림 (보통 조건, 낮을수록 좋음)</p>
+      <div class="bars">
+        <div class="bar dim"><span>센서 1개 (v0a)</span><div class="tr"><div class="fl" style="--w:100%;background:var(--coral)"></div></div><b>2.08</b></div>
+        <div class="bar"><span>센서 2개 (v0b)</span><div class="tr"><div class="fl" style="--w:1.5%;background:var(--teal)"></div></div><b>0.02</b></div>
+      </div>
+      <p class="muted" style="font-size:17px;margin-top:18px">재현율 (진짜 나쁜 자세를 잡아낸 비율, 높을수록 좋음)</p>
+      <div class="bars">
+        <div class="bar dim"><span>센서 1개 (v0a)</span><div class="tr"><div class="fl" style="--w:33%;background:var(--coral)"></div></div><b>33%</b></div>
+        <div class="bar"><span>센서 2개 (v0b)</span><div class="tr"><div class="fl" style="--w:90%;background:var(--teal)"></div></div><b>90%</b></div>
+      </div>
+    </div>
+    <div class="col" style="flex:.6;justify-content:center">
+      <div class="card t"><h3>H1 지지됨</h3><p>같은 룰 방식에서 센서만 1개 → 2개로 바꿔도 오알림은 약 100배 감소, 재현율은 33% → 90%.</p></div>
+      <div class="card"><p class="muted" style="font-size:16px">스트레스 조건에서도 방향은 같음: 오알림 2.01 → 0.66, 재현율 29% → 73%.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide">
+  <div class="kicker">08 · 결과 ② — 가설 2</div>
+  <h2>룰 vs CNN: 보통에선 룰이 충분, 스트레스에선 CNN이 약간 우세</h2>
+  <table>
+    <tr><th>엔진</th><th>보통 재현율</th><th>보통 오알림/h</th><th>스트레스 재현율</th><th>스트레스 오알림/h</th><th>학습 시간</th></tr>
+    <tr><td>센서 1개 룰 (v0a)</td><td>33%</td><td>2.08</td><td>29%</td><td>2.01</td><td>—</td></tr>
+    <tr><td>센서 2개 룰 (v0b)</td><td>89.8%</td><td><b>0.02</b></td><td>72.5%</td><td>0.66</td><td>—</td></tr>
+    <tr><td>CNN 처음부터</td><td>91.4%</td><td>0.15 ± 0.13</td><td><b>77.4%</b></td><td>0.74 ± 0.18</td><td>22.6분</td></tr>
+    <tr class="hl"><td>CNN + HARTH 사전학습</td><td>90.0%</td><td>0.09 ± 0.10</td><td>75.5%</td><td><b>0.64 ± 0.21</b></td><td><b>11.6분</b></td></tr>
+  </table>
+  <div class="row" style="margin-top:22px">
+    <div class="card"><h3>H2는 일부만</h3><p>CNN은 보통 조건에서 오알림을 줄이지 못했고(룰 0.02 vs CNN 0.09~0.15), 센서가 밀리는 스트레스에서 재현율이 3–5%p 높았다.</p></div>
+    <div class="card t"><h3>사전학습의 이득은 '속도'</h3><p>정확도는 비슷하고 학습 시간이 절반. 오알림은 처음부터보다 약간 적다(스트레스 0.64 vs 0.74).</p></div>
+  </div>
+  <p class="note">CNN: 시뮬 실험실 32명 + 하루 생활 160명, 25 epoch, 시드 6개 평균 ± 표준편차. 오알림 표준편차가 커서 CNN 간 차이는 확정적이지 않음.</p>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="kicker">09 · 해석</div>
+  <h2>확실한 것과 아직 모르는 것</h2>
+  <div class="row">
+    <div class="card t col">
+      <h3>확실한 것</h3>
+      <ul>
+        <li>센서 2개가 힙 힌지 오알림을 거의 없앤다 (시뮬 기준)</li>
+        <li>사전학습은 학습 시간을 절반으로 줄인다</li>
+        <li>전체 파이프라인이 하드웨어 없이 끝까지 돈다</li>
+      </ul>
+    </div>
+    <div class="card c col">
+      <h3>아직 모르는 것</h3>
+      <ul>
+        <li><b>시뮬 → 실제</b>에서도 성립하는가 (sim-to-real)</li>
+        <li>정지 자세는 룰로 충분, ML 이득은 센서가 밀릴 때만?</li>
+        <li>옷 위·재착용 시 부착 편차의 실제 크기</li>
+      </ul>
+    </div>
+  </div>
+  <p class="muted" style="margin-top:16px">가설이 틀려도 그대로 보고한다는 원칙으로 설계했고, 현재 결과는 "룰이 강한 기준선이고 ML은 어려운 조건에서만 이득"에 가깝습니다.</p>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="kicker">10 · 다음 단계</div>
+  <h2>실제 센서 데이터로 검증하러 간다</h2>
+  <div class="row">
+    <div class="col">
+      <div class="card"><h3>① 하드웨어</h3><p>ESP32 + MPU-6050 ×2, 점퍼 연결(납땜 없음), 약 2–3만원. 펌웨어는 이미 작성 완료.</p></div>
+      <div class="card"><h3>② 본인 데이터 수집</h3><p>허리디스크 환자인 제가 직접 착용. <code>record.py</code> → <code>replay</code> 왕복 점검.</p></div>
+    </div>
+    <div class="col">
+      <div class="card"><h3>③ sim-to-real 점검</h3><p>시뮬 vs 실측 분포 차이를 확인하고 보정·미세조정.</p></div>
+      <div class="card"><h3>④ 자유 생활 · 확장</h3><p>하루 착용 테스트, 휴대폰 푸시 알림, 프로필 전환 데모 리허설.</p></div>
+    </div>
+  </div>
+  <div class="card c" style="margin-top:6px"><p style="font-size:17px">표현 원칙: 치료·진단·재활이 아니라 <b>"피해야 할 자세 습관 알림"</b>. 의료기기가 아닙니다.</p></div>
+</section>
+
+<!-- 12 -->
+<section class="slide dark" style="justify-content:center">
+  <div class="kicker">데모 · 마무리</div>
+  <h2 style="font-size:46px">센서가 하나 더 있으면, 자세 알림이 정확해진다</h2>
+  <pre>python -m ml.app.record --fake --live --engine v0b
+python -m ml.app.replay --profile lumbar_flexion_guard --engine cnn</pre>
+  <p class="muted" style="margin-top:28px">하드웨어 없이 가상 센서로 실시간 판정과 프로필 전환을 보여드립니다. 질문 받겠습니다.</p>
+</section>
+
+</div></div>
+<div id="hint">← → / 스페이스 · F 전체화면</div>
+<div id="cnt"></div>
+<script src="../src/presentation.js"></script>
+</body>
+</html>
