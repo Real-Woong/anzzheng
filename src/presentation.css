@@ -148,3 +148,6 @@ table.cmp td.no{color:var(--coral);font-weight:800}
 .card:has(.bl){padding:28px 32px}
 .slide .row:has(.bl) + p{margin-top:28px;font-size:20px}
 .chip.c{font-size:13px;margin-left:6px;vertical-align:middle}
+
+.src{font-size:13px;line-height:1.5;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:8px}
+.src b{color:var(--ink)}

@@ -162,6 +162,7 @@
     </div>
   </div>
   <p class="note" style="margin-top:10px">힙힌지 때 실제 허리는 안 굽는데 굴곡각이 골반을 따라 오르는 만큼이 crosstalk. 이 값을 빼서 "순수 허리 굽힘"만 남긴다.</p>
+  <p class="src"><b>근거</b> ① MPU-6050 데이터시트(InvenSense, PS-MPU-6000A-00): ±500°/s = 65.5 LSB/(°/s), ±4g = 8,192 LSB/g · ② 가속도 기울기 atan2: NXP AN3461 "Tilt Sensing Using Linear Accelerometers" · ③ 상보 필터: Colton 2007 "The Balance Filter" (0.98/0.02), Mahony 외 2008, <i>IEEE Trans. Automatic Control</i> 53(5):1203–1217</p>
 </section>
 
 <!-- 4c -->
@@ -180,6 +181,7 @@
     <tr><td><b>l_acc_n</b></td><td class="f">(‖a<sub>l</sub>‖ − 1) ÷ σ<sub>acc</sub></td><td>아래 센서의 같은 값 (흔들림 크기)</td></tr>
   </table>
   <p class="note">θ = 상보 필터로 구한 시상면 기울기(°), P₀·T₀·offset·crosstalk·sit_offset·slump_ref·σ = 보정 단계에서 구한 값. 모든 계산은 ml/signal/process.py</p>
+  <p class="src"><b>근거</b> 두 센서 사이 각도를 요추각으로 정의: Mjøsund 외 2017, <i>BMC Musculoskelet Disord</i> 18:124 (ViMove, T12·S2, Vicon 대비 굴곡 RMSE 1.82°) · L1·S1 부착: Meinke 외 2021, <i>JMIR Res Protoc</i> 10(8):e26982 · <b>crosstalk 보정, lumbar_norm, σ 정규화, 3단 보정 순서는 이 프로젝트의 자체 설계</b></p>
 </section>
 
 <!-- 5 -->
