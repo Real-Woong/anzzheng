@@ -138,3 +138,13 @@ table.cmp th,table.cmp td{vertical-align:middle;padding:9px 12px}
 table.cmp .sub,.card .sub{font-size:12px;color:var(--muted);font-weight:500}
 table.cmp td.ok{color:var(--teal);font-weight:800}
 table.cmp td.no{color:var(--coral);font-weight:800}
+
+/* roomier two-card slides (problem, interpretation) */
+.slide .row:has(.bl){flex:none;align-items:stretch;margin-top:8px}
+.card .bl{gap:18px;margin-top:6px}
+.card .bl li{font-size:22px;line-height:1.5}
+.card .bl li::before{width:10px;height:10px}
+.card:has(.bl) h3{font-size:26px;margin-bottom:12px}
+.card:has(.bl){padding:28px 32px}
+.slide .row:has(.bl) + p{margin-top:28px;font-size:20px}
+.chip.c{font-size:13px;margin-left:6px;vertical-align:middle}

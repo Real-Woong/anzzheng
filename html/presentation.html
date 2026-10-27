@@ -42,15 +42,15 @@
   <div class="row">
     <div class="card c col">
       <h3>센서 1개의 한계</h3>
-      <ul>
+      <ul class="bl">
         <li>상체 기울기만 측정</li>
         <li>권장 동작인 <b>힙 힌지</b>에도 경고 (오알림)</li>
-        <li>허리가 뜬 채 뒤로 기댄 자세는 놓침</li>
+        <li>허리가 뜬 채 뒤로 기댄 자세는 놓칠 수 있음 <span class="chip c">원리상 예상 · 실측 전</span></li>
       </ul>
     </div>
     <div class="card c col">
       <h3>모두에게 같은 기준</h3>
-      <ul>
+      <ul class="bl">
         <li>탈출 부위마다 피해야 할 동작이 다름</li>
         <li>요추: 허리 말아 굽히기</li>
         <li>경추: 목 앞으로 빼기</li>
@@ -62,7 +62,7 @@
 
 <!-- 3b -->
 <section class="slide">
-  <div class="kicker">02 · 비슷한 제품은 이미 있다</div>
+  <div class="kicker">03 · 비슷한 제품</div>
   <h2 style="margin-bottom:14px">센서 2개 측정 자체는 새롭지 않다</h2>
   <table class="ch cmp">
     <tr><th>제품</th><th>부착 지점</th><th>요추 굴곡 vs 힙 힌지</th><th>쓰는 곳</th><th>기준 설정</th><th>가격대</th></tr>
@@ -81,7 +81,7 @@
 
 <!-- 3c -->
 <section class="slide">
-  <div class="kicker">02 · 차별점</div>
+  <div class="kicker">04 · 차별점</div>
   <h2 style="margin-bottom:14px">그래서 우리는 "무엇을 다르게" 했나</h2>
   <div class="grid3" style="flex:none">
     <div class="card t">
@@ -108,7 +108,7 @@
 
 <!-- 4 -->
 <section class="slide">
-  <div class="kicker">03 · 핵심 원리</div>
+  <div class="kicker">05 · 핵심 원리</div>
   <h2>곡률은 두 점의 기울기 차이다</h2>
   <div class="row">
     <div class="col" style="flex:1.2">
@@ -135,7 +135,7 @@
 
 <!-- 4b -->
 <section class="slide">
-  <div class="kicker">04 · 핵심 원리 (계산 ① 센서값 → 기울기 → 보정)</div>
+  <div class="kicker">05 · 핵심 원리 (계산 ① 센서값 → 기울기 → 보정)</div>
   <h2 style="margin-bottom:14px">원시 센서값이 "의미 있는 값"이 되는 과정</h2>
   <div class="prow" style="flex:1;min-height:0;align-items:stretch">
     <div class="pb mt">
@@ -166,7 +166,7 @@
 
 <!-- 4c -->
 <section class="slide">
-  <div class="kicker">04 · 핵심 원리 (계산 ② 모델 입력 8채널)</div>
+  <div class="kicker">05 · 핵심 원리 (계산 ② 모델 입력 8채널)</div>
   <h2 style="margin-bottom:12px">8채널은 이렇게 계산한다</h2>
   <table class="ch">
     <tr><th style="width:130px">채널</th><th style="width:400px">수식</th><th>왜 이렇게 했나</th></tr>
@@ -184,12 +184,12 @@
 
 <!-- 5 -->
 <section class="slide" id="pipe">
-  <div class="kicker">04 · 시스템 구조 (실시간으로 돌아가는 모습)</div>
+  <div class="kicker">06 · 시스템 구조 (실시간으로 돌아가는 모습)</div>
   <h2 style="margin-bottom:14px">센서에서 알림까지, 이렇게 흘러간다</h2>
   <div class="modes">
     <button data-mode="flex" class="m on">허리를 말아 숙이기</button>
     <button data-mode="hinge" class="m">힙 힌지로 숙이기 (권장 동작)</button>
-    <span class="muted" style="font-size:15px">버튼을 눌러 두 동작을 비교해 보세요</span>
+    <span class="chip c">예시 시나리오 · 실제 모델 출력 아님</span><span class="muted" style="font-size:15px">버튼을 눌러 두 동작을 비교</span>
   </div>
   <div class="flow">
     <div class="st">
@@ -255,7 +255,7 @@
 
 <!-- 6 -->
 <section class="slide">
-  <div class="kicker">05 · 지금까지 구현한 것</div>
+  <div class="kicker">07 · 지금까지 구현한 것</div>
   <h2 style="margin-bottom:12px">코드는 이 순서로 흘러간다</h2>
   <div class="ctrl"><b>app/ (Controller)</b>가 아래 순서대로 호출 · 계산은 services에만 · 학습과 실시간이 같은 윈도우 코드를 재사용</div>
   <div class="rowlab">학습 (오프라인)</div>
@@ -267,7 +267,7 @@
 
 <!-- 7 -->
 <section class="slide">
-  <div class="kicker">06 · 접근</div>
+  <div class="kicker">08 · 접근</div>
   <h2>하드웨어 전에, 시뮬레이션과 공개 데이터로 먼저</h2>
   <div class="row">
     <div class="col">
@@ -291,7 +291,7 @@
 
 <!-- 8 -->
 <section class="slide">
-  <div class="kicker">07 · 결과 ① — 가설 1</div>
+  <div class="kicker">09 · 결과 ① — 가설 1</div>
   <h2>센서 2개로 오알림이 2.08 → 0.02회/시간</h2>
   <div class="row">
     <div class="col" style="justify-content:center">
@@ -315,7 +315,7 @@
 
 <!-- 9 -->
 <section class="slide">
-  <div class="kicker">08 · 결과 ② — 가설 2</div>
+  <div class="kicker">10 · 결과 ② — 가설 2</div>
   <h2>룰 vs CNN: 보통에선 룰이 충분, 스트레스에선 CNN이 약간 우세</h2>
   <table>
     <tr><th>엔진</th><th>보통 재현율</th><th>보통 오알림/h</th><th>스트레스 재현율</th><th>스트레스 오알림/h</th><th>학습 시간</th></tr>
@@ -333,12 +333,12 @@
 
 <!-- 10 -->
 <section class="slide">
-  <div class="kicker">09 · 해석</div>
+  <div class="kicker">11 · 해석</div>
   <h2>확실한 것과 아직 모르는 것</h2>
   <div class="row">
     <div class="card t col">
       <h3>확실한 것</h3>
-      <ul>
+      <ul class="bl">
         <li>센서 2개가 힙 힌지 오알림을 거의 없앤다 (시뮬 기준)</li>
         <li>사전학습은 학습 시간을 절반으로 줄인다</li>
         <li>전체 파이프라인이 하드웨어 없이 끝까지 돈다</li>
@@ -346,7 +346,7 @@
     </div>
     <div class="card c col">
       <h3>아직 모르는 것</h3>
-      <ul>
+      <ul class="bl">
         <li><b>시뮬 → 실제</b>에서도 성립하는가 (sim-to-real)</li>
         <li>정지 자세는 룰로 충분, ML 이득은 센서가 밀릴 때만?</li>
         <li>옷 위·재착용 시 부착 편차의 실제 크기</li>
@@ -358,11 +358,11 @@
 
 <!-- 11 -->
 <section class="slide">
-  <div class="kicker">10 · 다음 단계</div>
+  <div class="kicker">12 · 다음 단계</div>
   <h2>실제 센서 데이터로 검증하러 간다</h2>
   <div class="row">
     <div class="col">
-      <div class="card"><h3>① 하드웨어</h3><p>ESP32 + MPU-6050 ×2, 점퍼 연결(납땜 없음), 약 2–3만원. 펌웨어는 이미 작성 완료.</p></div>
+      <div class="card"><h3>① 하드웨어</h3><p>ESP32 + MPU-6050 ×2, 점퍼 연결(납땜 없음), 약 2–3만원. 펌웨어는 작성 완료, 실제 ESP32 업로드·검증은 이제부터.</p></div>
       <div class="card"><h3>② 본인 데이터 수집</h3><p>허리디스크 환자인 제가 직접 착용. <code>record.py</code> → <code>replay</code> 왕복 점검.</p></div>
     </div>
     <div class="col">
