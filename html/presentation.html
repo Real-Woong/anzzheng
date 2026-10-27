@@ -161,19 +161,13 @@
 <!-- 6 -->
 <section class="slide">
   <div class="kicker">05 · 지금까지 구현한 것</div>
-  <h2>파이프라인 전체가 코드로 연결되어 있다</h2>
-  <div class="grid3">
-    <div class="card t"><h3>신호처리</h3><p>채널 파생, 서기/힙힌지/앉기/구부정 3단 보정</p></div>
-    <div class="card t"><h3>판정 엔진 4종</h3><p>v0a(센서1) · v0b(센서2 룰) · v0b 개인 범위 보정 · CNN</p></div>
-    <div class="card t"><h3>상태 머신</h3><p>히스테리시스, 활동 게이트, 5초 디바운싱</p></div>
-    <div class="card"><h3>PostureCNN</h3><p>활동 3분류 + 자세 요소 2개 멀티헤드 (PyTorch, MPS)</p></div>
-    <div class="card"><h3>학습 · 평가</h3><p>LOSO 평가, 이벤트 지표(재현율·시간당 오알림)</p></div>
-    <div class="card"><h3>전이학습</h3><p>HARTH 22명 사전학습 → 미세조정</p></div>
-    <div class="card"><h3>시뮬레이터</h3><p>공식 기반 합성 + MuJoCo(MyoBack) 물리 모델, 하루 생활 시뮬</p></div>
-    <div class="card"><h3>실시간</h3><p>LiveMonitor, 알림 문장 생성, 프로필 전환 데모</p></div>
-    <div class="card"><h3>펌웨어</h3><p>ESP32 + MPU-6050×2, 50Hz CSV 시리얼</p></div>
-  </div>
-  <p class="note">구조: app(Controller) → services(Service) → repo(Repo) → domain. 계산은 services에만 둔다.</p>
+  <h2 style="margin-bottom:12px">코드는 이 순서로 흘러간다</h2>
+  <div class="ctrl"><b>app/ (Controller)</b>가 아래 순서대로 호출 · 계산은 services에만 · 학습과 실시간이 같은 윈도우 코드를 재사용</div>
+  <div class="rowlab">학습 (오프라인)</div>
+  <div class="prow"><div class="pb "><span class="pn">1</span><span class="lay r">Repo</span><h3>데이터</h3><p>HARTH 22명 + 시뮬레이터 사람</p><code>harth_repo · session_repo</code></div><div class="ar"></div><div class="pb "><span class="pn">2</span><span class="lay s">Signal</span><h3>신호처리</h3><p>센서 12채널 → 8채널</p><code>signal/process.py</code></div><div class="ar"></div><div class="pb "><span class="pn">3</span><span class="lay v">Service</span><h3>윈도우·라벨</h3><p>2초씩 자르고 정답 붙이기</p><code>windowing.py</code></div><div class="ar"></div><div class="pb key"><span class="pn">4</span><span class="lay v">Service</span><h3>학습</h3><p>HARTH 사전학습 → 미세조정</p><code>trainer.py · posture_cnn.py</code></div><div class="ar"></div><div class="pb "><span class="pn">5</span><span class="lay v">Service</span><h3>평가</h3><p>룰 vs CNN 같은 사람들로 채점</p><code>evaluator.py</code></div></div>
+  <div class="down"><span>학습된 모델 .pt</span></div>
+  <div class="rowlab">실시간 사용</div>
+  <div class="prow short rev"><div class="pb "><span class="pn">6</span><span class="lay r">Repo</span><h3>모델 저장</h3><p>학습 결과를 파일로</p><code>model_repo → artifacts/*.pt</code></div><div class="ar"></div><div class="pb key"><span class="pn">7</span><span class="lay v">Service</span><h3>LiveMonitor</h3><p>.pt를 불러와 0.5초마다 판정</p><code>live.py</code></div><div class="ar"></div><div class="pb "><span class="pn">8</span><span class="lay j">Judge</span><h3>상태 머신</h3><p>내 프로필 동작이 5초 이어지나?</p><code>state_machine.py</code></div><div class="ar"></div><div class="pb "><span class="pn">9</span><span class="lay v">Service</span><h3>알림</h3><p>알림 문장 생성</p><code>notifier.py</code></div></div>
 </section>
 
 <!-- 7 -->
