@@ -131,3 +131,10 @@ table.ch th,table.ch td{text-align:left;vertical-align:top;padding:9px 12px}
 table.ch td.f{font:16px ui-monospace,Menlo,"Apple SD Gothic Neo",monospace;color:var(--ink);background:var(--tint);border-radius:6px}
 table.ch tr.hl td{background:var(--teal-t)}
 table.ch tr.hl td.f{background:#cfece7}
+
+/* comparison slides */
+table.cmp{font-size:16px}
+table.cmp th,table.cmp td{vertical-align:middle;padding:9px 12px}
+table.cmp .sub,.card .sub{font-size:12px;color:var(--muted);font-weight:500}
+table.cmp td.ok{color:var(--teal);font-weight:800}
+table.cmp td.no{color:var(--coral);font-weight:800}
