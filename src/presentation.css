@@ -119,3 +119,15 @@ tr.hl td{background:var(--teal-t);font-weight:700}
 .prow .ar::before{left:2px;right:10px;height:4px;margin-top:-2px;background:repeating-linear-gradient(90deg,var(--teal) 0 7px,transparent 7px 13px);animation:dash .5s linear infinite}
 @keyframes dash{to{background-position:13px 0}}
 .prow .ar::after{left:auto;right:1px;top:50%;margin-top:-8px;width:0;height:0;border-radius:0;background:none;border:8px solid transparent;border-left:12px solid var(--teal);border-right:0;animation:none;opacity:1}
+
+/* math slides */
+.pb.mt{padding:16px 16px 12px;gap:8px}
+.pb.mt h3{margin-left:14px}
+.eq{font:15px/1.5 ui-monospace,Menlo,"Apple SD Gothic Neo",monospace;background:#fff;border-radius:8px;padding:7px 10px;color:var(--ink)}
+.eq small{color:var(--muted);font-size:12px}
+.pb.mt p{font-size:14px;line-height:1.45}
+table.ch{font-size:16px}
+table.ch th,table.ch td{text-align:left;vertical-align:top;padding:9px 12px}
+table.ch td.f{font:16px ui-monospace,Menlo,"Apple SD Gothic Neo",monospace;color:var(--ink);background:var(--tint);border-radius:6px}
+table.ch tr.hl td{background:var(--teal-t)}
+table.ch tr.hl td.f{background:#cfece7}

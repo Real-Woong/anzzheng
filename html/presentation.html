@@ -87,6 +87,55 @@
   </div>
 </section>
 
+<!-- 4b -->
+<section class="slide">
+  <div class="kicker">04 · 핵심 원리 (계산 ① 센서값 → 기울기 → 보정)</div>
+  <h2 style="margin-bottom:14px">원시 센서값이 "의미 있는 값"이 되는 과정</h2>
+  <div class="prow" style="flex:1;min-height:0;align-items:stretch">
+    <div class="pb mt">
+      <span class="pn">1</span><h3>단위 변환</h3>
+      <div class="eq">a = raw ÷ 8192 &nbsp;(g)</div>
+      <div class="eq">ω = raw ÷ 65.5 &nbsp;(°/s)</div>
+      <p>센서가 내는 정수(LSB)를 가속도 g, 회전 속도 °/s로 바꾼다. 위·아래 센서 각각 가속도 3축 + 자이로 3축 = 12개.</p>
+    </div>
+    <div class="ar"></div>
+    <div class="pb mt">
+      <span class="pn">2</span><h3>기울기 θ (상보 필터)</h3>
+      <div class="eq">θ<sub>acc</sub> = atan2(a<sub>z</sub>, a<sub>x</sub>)</div>
+      <div class="eq">θ[i] = 0.98·( θ[i−1] + (ω<sub>y</sub> − b)·Δt ) + 0.02·θ<sub>acc</sub>[i]</div>
+      <div class="eq">Δt = 1/50 s &nbsp; b = 서있을 때 ω<sub>y</sub> 평균</div>
+      <p>자이로는 빠르지만 쌓이면 어긋나고(drift), 가속도는 느리지만 어긋나지 않는다 → <b>98 : 2</b>로 섞는다. 위(θ<sub>u</sub>)·아래(θ<sub>l</sub>) 센서 각각 구함.</p>
+    </div>
+    <div class="ar"></div>
+    <div class="pb mt key">
+      <span class="pn">3</span><h3>3단 보정 (개인차 지우기)</h3>
+      <div class="eq">① 서기: P₀=mean(θ<sub>l</sub>) T₀=mean(θ<sub>u</sub>)<br>&nbsp;&nbsp;&nbsp;offset = mean(θ<sub>u</sub>−θ<sub>l</sub>)</div>
+      <div class="eq">② 힙힌지: crosstalk = 직선 기울기<br>&nbsp;&nbsp;&nbsp;y=θ<sub>u</sub>−θ<sub>l</sub>−offset, x=θ<sub>l</sub>−P₀</div>
+      <div class="eq">③ 앉기: sit_offset, slump_ref<br>&nbsp;&nbsp;&nbsp;= 앉기·구부정 앉기의 평균 굴곡각</div>
+      <div class="eq">σ<sub>acc</sub> = std‖a<sub>u</sub>‖ &nbsp; σ<sub>gyr</sub> = std(ω<sub>y</sub>−b) <small>(서기)</small></div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:10px">힙힌지 때 실제 허리는 안 굽는데 굴곡각이 골반을 따라 오르는 만큼이 crosstalk. 이 값을 빼서 "순수 허리 굽힘"만 남긴다.</p>
+</section>
+
+<!-- 4c -->
+<section class="slide">
+  <div class="kicker">04 · 핵심 원리 (계산 ② 모델 입력 8채널)</div>
+  <h2 style="margin-bottom:12px">8채널은 이렇게 계산한다</h2>
+  <table class="ch">
+    <tr><th style="width:130px">채널</th><th style="width:400px">수식</th><th>왜 이렇게 했나</th></tr>
+    <tr><td><b>pelvis_rel</b></td><td class="f">θ<sub>l</sub> − P₀</td><td>골반 기울기. 앉기·숙이기 맥락을 알려 준다</td></tr>
+    <tr><td><b>trunk_rel</b></td><td class="f">θ<sub>u</sub> − T₀</td><td>상체 기울기. "상체 숙임 주의" 프로필용</td></tr>
+    <tr class="hl"><td><b>lumbar_c</b></td><td class="f">(θ<sub>u</sub> − θ<sub>l</sub>) − offset − crosstalk · pelvis_rel</td><td><b>핵심.</b> 위−아래로 힙힌지(함께 기움)를 상쇄하고, 새는 만큼(crosstalk)까지 빼서 허리 굽힘만 남김</td></tr>
+    <tr><td><b>lumbar_norm</b></td><td class="f">(lumbar_c − sit_offset) ÷ (slump_ref − sit_offset)</td><td>0 = 바르게 앉기, 1 = 내 구부정 기준. 피부 위 센서 감도(gain)가 사람마다 달라도 분자·분모에서 상쇄</td></tr>
+    <tr><td><b>u_gyr_n</b></td><td class="f">(ω<sub>y,u</sub> − b<sub>u</sub>) ÷ σ<sub>gyr</sub></td><td>위 센서가 얼마나 빨리 도나. 노이즈로 나눠 "몇 σ인가"로 사람 간 차이 제거</td></tr>
+    <tr><td><b>l_gyr_n</b></td><td class="f">(ω<sub>y,l</sub> − b<sub>l</sub>) ÷ σ<sub>gyr</sub></td><td>아래 센서 회전 속도 (움직임·전환 판단)</td></tr>
+    <tr><td><b>u_acc_n</b></td><td class="f">(‖a<sub>u</sub>‖ − 1) ÷ σ<sub>acc</sub></td><td>정지면 ‖a‖≈1g. 걷기·전환에서 1g에서 벗어나 값이 커진다</td></tr>
+    <tr><td><b>l_acc_n</b></td><td class="f">(‖a<sub>l</sub>‖ − 1) ÷ σ<sub>acc</sub></td><td>아래 센서의 같은 값 (흔들림 크기)</td></tr>
+  </table>
+  <p class="note">θ = 상보 필터로 구한 시상면 기울기(°), P₀·T₀·offset·crosstalk·sit_offset·slump_ref·σ = 보정 단계에서 구한 값. 모든 계산은 ml/signal/process.py</p>
+</section>
+
 <!-- 5 -->
 <section class="slide" id="pipe">
   <div class="kicker">04 · 시스템 구조 (실시간으로 돌아가는 모습)</div>
